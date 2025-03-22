@@ -142,7 +142,30 @@ void task_b_update(void *parameters)
 
 	#if (TEST_X == TEST_2)
 
-	/* Here Chatbot Artificial Intelligence generated code */
+	/* Non-blocking execution using a state machine approach */
+		static enum {STATE_INIT, STATE_RUNNING, STATE_WAIT} state = STATE_INIT;
+		static uint32_t last_tick = 0;
+
+		switch (state)
+		{
+			case STATE_INIT:
+				LOGGER_LOG("  %s initialized - %s\r\n", GET_NAME(task_b_update), p_task_b);
+				state = STATE_RUNNING;
+				break;
+
+			case STATE_RUNNING:
+				LOGGER_LOG("  %s is executing non-blocking operation\r\n", GET_NAME(task_b_update));
+				last_tick = HAL_GetTick();
+				state = STATE_WAIT;
+				break;
+
+			case STATE_WAIT:
+				if (HAL_GetTick() - last_tick >= TASK_B_DEL_MAX)
+				{
+					state = STATE_RUNNING;
+				}
+				break;
+		}
 
 	#endif
 }

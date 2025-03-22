@@ -61,8 +61,8 @@ all: main-build
 main-build: tdse-tp0_05-hw_sw_test.elf secondary-outputs
 
 # Tool invocations
-tdse-tp0_05-hw_sw_test.elf tdse-tp0_05-hw_sw_test.map: $(OBJS) $(USER_OBJS) /home/branromero/Escritorio/Sistemas\ Embebidos/tdse_workspace_tp0/tdse-tp0_05-hw_sw_test/STM32F103RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "tdse-tp0_05-hw_sw_test.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/home/branromero/Escritorio/Sistemas Embebidos/tdse_workspace_tp0/tdse-tp0_05-hw_sw_test/STM32F103RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="tdse-tp0_05-hw_sw_test.map" -Wl,--gc-sections -static -specs=rdimon.specs --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+tdse-tp0_05-hw_sw_test.elf tdse-tp0_05-hw_sw_test.map: $(OBJS) $(USER_OBJS) C:\Users\ASUS\Desktop\Sistemas\ Embebidos\tdse_workspace_tp0\tdse-tp0_05-hw_sw_test\STM32F103RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "tdse-tp0_05-hw_sw_test.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\ASUS\Desktop\Sistemas Embebidos\tdse_workspace_tp0\tdse-tp0_05-hw_sw_test\STM32F103RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="tdse-tp0_05-hw_sw_test.map" -Wl,--gc-sections -static -specs=rdimon.specs --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
