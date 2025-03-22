@@ -126,7 +126,10 @@ void task_a_update(void *parameters)
 	#if (TEST_X == TEST_2)
 
 	/* Here Chatbot Artificial Intelligence generated code */
-
+	while (1)
+	{
+		LOGGER_LOG("  %s is in a blocking state...\r\n", GET_NAME(task_a_update));
+	}
 	#endif
 }
 

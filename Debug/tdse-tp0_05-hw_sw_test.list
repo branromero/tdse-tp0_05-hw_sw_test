@@ -37,15 +37,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  00017f6d  00000000  00000000  0000ed55  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000a3b6  00000000  00000000  00026cc2  2**0
+ 17 .debug_line   000098d7  00000000  00000000  00026cc2  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00082d66  00000000  00000000  00031078  2**0
+ 18 .debug_str    00082d6c  00000000  00000000  00030599  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  000b3dde  2**0
+ 19 .comment      00000043  00000000  00000000  000b3305  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000025e8  00000000  00000000  000b3e24  2**2
+ 20 .debug_frame  000025e8  00000000  00000000  000b3348  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000081  00000000  00000000  000b640c  2**0
+ 21 .debug_line_str 00000087  00000000  00000000  000b5930  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -851,7 +851,7 @@ void *_sbrk(ptrdiff_t incr)
  80004be:	220c      	movs	r2, #12
  80004c0:	601a      	str	r2, [r3, #0]
     return (void *)-1;
- 80004c2:	f04f 33ff 	mov.w	r3, #4294967295
+ 80004c2:	f04f 33ff 	mov.w	r3, #4294967295	@ 0xffffffff
  80004c6:	e009      	b.n	80004dc <_sbrk+0x54>
   }
 
@@ -1082,7 +1082,7 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
     HAL_NVIC_SetPriority(SysTick_IRQn, TickPriority, 0U);
  80005ac:	2200      	movs	r2, #0
  80005ae:	6879      	ldr	r1, [r7, #4]
- 80005b0:	f04f 30ff 	mov.w	r0, #4294967295
+ 80005b0:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  80005b4:	f000 f903 	bl	80007be <HAL_NVIC_SetPriority>
     uwTickPrio = TickPriority;
  80005b8:	4a06      	ldr	r2, [pc, #24]	@ (80005d4 <HAL_InitTick+0x5c>)
@@ -1355,7 +1355,7 @@ __STATIC_INLINE uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t P
 
   return (
            ((PreemptPriority & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL)) << SubPriorityBits) |
- 8000734:	f04f 32ff 	mov.w	r2, #4294967295
+ 8000734:	f04f 32ff 	mov.w	r2, #4294967295	@ 0xffffffff
  8000738:	69bb      	ldr	r3, [r7, #24]
  800073a:	fa02 f303 	lsl.w	r3, r2, r3
  800073e:	43da      	mvns	r2, r3
@@ -1364,7 +1364,7 @@ __STATIC_INLINE uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t P
  8000744:	697b      	ldr	r3, [r7, #20]
  8000746:	409a      	lsls	r2, r3
            ((SubPriority     & (uint32_t)((1UL << (SubPriorityBits    )) - 1UL)))
- 8000748:	f04f 31ff 	mov.w	r1, #4294967295
+ 8000748:	f04f 31ff 	mov.w	r1, #4294967295	@ 0xffffffff
  800074c:	697b      	ldr	r3, [r7, #20]
  800074e:	fa01 f303 	lsl.w	r3, r1, r3
  8000752:	43d9      	mvns	r1, r3
@@ -1409,7 +1409,7 @@ __STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
  8000780:	6053      	str	r3, [r2, #4]
   NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
  8000782:	210f      	movs	r1, #15
- 8000784:	f04f 30ff 	mov.w	r0, #4294967295
+ 8000784:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  8000788:	f7ff ff90 	bl	80006ac <__NVIC_SetPriority>
   SysTick->VAL   = 0UL;                                             /* Load the SysTick Counter Value */
  800078c:	4b05      	ldr	r3, [pc, #20]	@ (80007a4 <SysTick_Config+0x40>)
@@ -4477,10 +4477,10 @@ void task_a_update(void *parameters)
  8001976:	68fb      	ldr	r3, [r7, #12]
  8001978:	f5b3 7f7a 	cmp.w	r3, #1000	@ 0x3e8
  800197c:	d3f8      	bcc.n	8001970 <task_a_update+0x68>
-	#if (TEST_X == TEST_2)
-
-	/* Here Chatbot Artificial Intelligence generated code */
-
+	while (1)
+	{
+		LOGGER_LOG("  %s is in a blocking state...\r\n", GET_NAME(task_a_update));
+	}
 	#endif
 }
  800197e:	bf00      	nop
@@ -4958,7 +4958,7 @@ void task_c_update(void *parameters)
  8001cc8:	f000 fcae 	bl	8002628 <__errno>
  8001ccc:	2309      	movs	r3, #9
  8001cce:	6003      	str	r3, [r0, #0]
- 8001cd0:	f04f 30ff 	mov.w	r0, #4294967295
+ 8001cd0:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  8001cd4:	bd70      	pop	{r4, r5, r6, pc}
  8001cd6:	4622      	mov	r2, r4
  8001cd8:	4631      	mov	r1, r6
@@ -4982,7 +4982,7 @@ void task_c_update(void *parameters)
  8001cfc:	f000 fc94 	bl	8002628 <__errno>
  8001d00:	2309      	movs	r3, #9
  8001d02:	6003      	str	r3, [r0, #0]
- 8001d04:	f04f 34ff 	mov.w	r4, #4294967295
+ 8001d04:	f04f 34ff 	mov.w	r4, #4294967295	@ 0xffffffff
  8001d08:	4620      	mov	r0, r4
  8001d0a:	b003      	add	sp, #12
  8001d0c:	bdf0      	pop	{r4, r5, r6, r7, pc}
@@ -5056,7 +5056,7 @@ void task_c_update(void *parameters)
  8001d98:	f000 fc46 	bl	8002628 <__errno>
  8001d9c:	2309      	movs	r3, #9
  8001d9e:	6003      	str	r3, [r0, #0]
- 8001da0:	f04f 30ff 	mov.w	r0, #4294967295
+ 8001da0:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  8001da4:	bd70      	pop	{r4, r5, r6, pc}
  8001da6:	462a      	mov	r2, r5
  8001da8:	4631      	mov	r1, r6
@@ -5097,7 +5097,7 @@ void task_c_update(void *parameters)
  8001df0:	f000 fc1a 	bl	8002628 <__errno>
  8001df4:	2309      	movs	r3, #9
  8001df6:	6003      	str	r3, [r0, #0]
- 8001df8:	f04f 30ff 	mov.w	r0, #4294967295
+ 8001df8:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  8001dfc:	bd38      	pop	{r3, r4, r5, pc}
  8001dfe:	3d01      	subs	r5, #1
  8001e00:	2d01      	cmp	r5, #1
@@ -5107,7 +5107,7 @@ void task_c_update(void *parameters)
  8001e08:	691b      	ldr	r3, [r3, #16]
  8001e0a:	429a      	cmp	r2, r3
  8001e0c:	d104      	bne.n	8001e18 <_close+0x34>
- 8001e0e:	f04f 33ff 	mov.w	r3, #4294967295
+ 8001e0e:	f04f 33ff 	mov.w	r3, #4294967295	@ 0xffffffff
  8001e12:	6003      	str	r3, [r0, #0]
  8001e14:	2000      	movs	r0, #0
  8001e16:	e7f1      	b.n	8001dfc <_close+0x18>
@@ -5115,7 +5115,7 @@ void task_c_update(void *parameters)
  8001e1a:	f7ff ffd6 	bl	8001dca <_swiclose>
  8001e1e:	2800      	cmp	r0, #0
  8001e20:	d1ec      	bne.n	8001dfc <_close+0x18>
- 8001e22:	f04f 33ff 	mov.w	r3, #4294967295
+ 8001e22:	f04f 33ff 	mov.w	r3, #4294967295	@ 0xffffffff
  8001e26:	6023      	str	r3, [r4, #0]
  8001e28:	e7e8      	b.n	8001dfc <_close+0x18>
  8001e2a:	bf00      	nop
@@ -5130,7 +5130,7 @@ void task_c_update(void *parameters)
  8001e3c:	f000 fbf4 	bl	8002628 <__errno>
  8001e40:	2309      	movs	r3, #9
  8001e42:	6003      	str	r3, [r0, #0]
- 8001e44:	f04f 30ff 	mov.w	r0, #4294967295
+ 8001e44:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  8001e48:	bd70      	pop	{r4, r5, r6, pc}
  8001e4a:	6863      	ldr	r3, [r4, #4]
  8001e4c:	260c      	movs	r6, #12
@@ -5250,7 +5250,7 @@ void task_c_update(void *parameters)
  8001f60:	d0c7      	beq.n	8001ef2 <_swiopen+0x2a>
  8001f62:	f000 fb61 	bl	8002628 <__errno>
  8001f66:	2311      	movs	r3, #17
- 8001f68:	f04f 34ff 	mov.w	r4, #4294967295
+ 8001f68:	f04f 34ff 	mov.w	r4, #4294967295	@ 0xffffffff
  8001f6c:	6003      	str	r3, [r0, #0]
  8001f6e:	4620      	mov	r0, r4
  8001f70:	b016      	add	sp, #88	@ 0x58
@@ -5290,7 +5290,7 @@ void task_c_update(void *parameters)
  8001fc0:	dc07      	bgt.n	8001fd2 <_get_semihosting_exts+0x56>
  8001fc2:	4620      	mov	r0, r4
  8001fc4:	f7ff ff0e 	bl	8001de4 <_close>
- 8001fc8:	f04f 30ff 	mov.w	r0, #4294967295
+ 8001fc8:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  8001fcc:	b003      	add	sp, #12
  8001fce:	e8bd 83f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, pc}
  8001fd2:	2204      	movs	r2, #4
@@ -5379,7 +5379,7 @@ void task_c_update(void *parameters)
  8002098:	4639      	mov	r1, r7
  800209a:	beab      	bkpt	0x00ab
  800209c:	4605      	mov	r5, r0
- 800209e:	f04f 32ff 	mov.w	r2, #4294967295
+ 800209e:	f04f 32ff 	mov.w	r2, #4294967295	@ 0xffffffff
  80020a2:	f8df 8088 	ldr.w	r8, [pc, #136]	@ 800212c <initialise_monitor_handles+0xb0>
  80020a6:	4623      	mov	r3, r4
  80020a8:	4c21      	ldr	r4, [pc, #132]	@ (8002130 <initialise_monitor_handles+0xb4>)
@@ -5579,7 +5579,7 @@ void task_c_update(void *parameters)
  800225c:	dc07      	bgt.n	800226e <__sflush_r+0xf6>
  800225e:	f9b4 300c 	ldrsh.w	r3, [r4, #12]
  8002262:	f043 0340 	orr.w	r3, r3, #64	@ 0x40
- 8002266:	f04f 30ff 	mov.w	r0, #4294967295
+ 8002266:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  800226a:	81a3      	strh	r3, [r4, #12]
  800226c:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
  800226e:	4407      	add	r7, r0
@@ -5828,7 +5828,7 @@ void task_c_update(void *parameters)
  80024a2:	b09d      	sub	sp, #116	@ 0x74
  80024a4:	da08      	bge.n	80024b8 <sniprintf+0x20>
  80024a6:	238b      	movs	r3, #139	@ 0x8b
- 80024a8:	f04f 30ff 	mov.w	r0, #4294967295
+ 80024a8:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  80024ac:	602b      	str	r3, [r5, #0]
  80024ae:	b01d      	add	sp, #116	@ 0x74
  80024b0:	e8bd 4030 	ldmia.w	sp!, {r4, r5, lr}
@@ -5840,7 +5840,7 @@ void task_c_update(void *parameters)
  80024c4:	931b      	str	r3, [sp, #108]	@ 0x6c
  80024c6:	bf0c      	ite	eq
  80024c8:	4623      	moveq	r3, r4
- 80024ca:	f104 33ff 	addne.w	r3, r4, #4294967295
+ 80024ca:	f104 33ff 	addne.w	r3, r4, #4294967295	@ 0xffffffff
  80024ce:	9304      	str	r3, [sp, #16]
  80024d0:	9307      	str	r3, [sp, #28]
  80024d2:	f64f 73ff 	movw	r3, #65535	@ 0xffff
@@ -6135,7 +6135,7 @@ void task_c_update(void *parameters)
  800272a:	f000 fd77 	bl	800321c <_sbrk_r>
  800272e:	1c43      	adds	r3, r0, #1
  8002730:	d103      	bne.n	800273a <sbrk_aligned+0x26>
- 8002732:	f04f 34ff 	mov.w	r4, #4294967295
+ 8002732:	f04f 34ff 	mov.w	r4, #4294967295	@ 0xffffffff
  8002736:	4620      	mov	r0, r4
  8002738:	bd70      	pop	{r4, r5, r6, pc}
  800273a:	1cc4      	adds	r4, r0, #3
@@ -6343,7 +6343,7 @@ void task_c_update(void *parameters)
  8002912:	230c      	movs	r3, #12
  8002914:	f8ca 3000 	str.w	r3, [sl]
  8002918:	89a3      	ldrh	r3, [r4, #12]
- 800291a:	f04f 30ff 	mov.w	r0, #4294967295
+ 800291a:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  800291e:	f043 0340 	orr.w	r3, r3, #64	@ 0x40
  8002922:	81a3      	strh	r3, [r4, #12]
  8002924:	e7e9      	b.n	80028fa <__ssputs_r+0x8a>
@@ -6368,7 +6368,7 @@ void task_c_update(void *parameters)
  800294a:	b930      	cbnz	r0, 800295a <_svfiprintf_r+0x32>
  800294c:	230c      	movs	r3, #12
  800294e:	603b      	str	r3, [r7, #0]
- 8002950:	f04f 30ff 	mov.w	r0, #4294967295
+ 8002950:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  8002954:	b01d      	add	sp, #116	@ 0x74
  8002956:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
  800295a:	2340      	movs	r3, #64	@ 0x40
@@ -6404,7 +6404,7 @@ void task_c_update(void *parameters)
  80029aa:	2b00      	cmp	r3, #0
  80029ac:	f000 809f 	beq.w	8002aee <_svfiprintf_r+0x1c6>
  80029b0:	2300      	movs	r3, #0
- 80029b2:	f04f 32ff 	mov.w	r2, #4294967295
+ 80029b2:	f04f 32ff 	mov.w	r2, #4294967295	@ 0xffffffff
  80029b6:	e9cd 2305 	strd	r2, r3, [sp, #20]
  80029ba:	f10a 0a01 	add.w	sl, sl, #1
  80029be:	9304      	str	r3, [sp, #16]
@@ -6626,7 +6626,7 @@ void task_c_update(void *parameters)
  8002bae:	6e6b      	ldr	r3, [r5, #100]	@ 0x64
  8002bb0:	07dc      	lsls	r4, r3, #31
  8002bb2:	d504      	bpl.n	8002bbe <_vfiprintf_r+0x4e>
- 8002bb4:	f04f 30ff 	mov.w	r0, #4294967295
+ 8002bb4:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  8002bb8:	b01d      	add	sp, #116	@ 0x74
  8002bba:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
  8002bbe:	89ab      	ldrh	r3, [r5, #12]
@@ -6666,7 +6666,7 @@ void task_c_update(void *parameters)
  8002c18:	2b00      	cmp	r3, #0
  8002c1a:	f000 809f 	beq.w	8002d5c <_vfiprintf_r+0x1ec>
  8002c1e:	2300      	movs	r3, #0
- 8002c20:	f04f 32ff 	mov.w	r2, #4294967295
+ 8002c20:	f04f 32ff 	mov.w	r2, #4294967295	@ 0xffffffff
  8002c24:	e9cd 2305 	strd	r2, r3, [sp, #20]
  8002c28:	f10a 0a01 	add.w	sl, sl, #1
  8002c2c:	9304      	str	r3, [sp, #16]
@@ -6900,7 +6900,7 @@ void task_c_update(void *parameters)
  8002e48:	47c8      	blx	r9
  8002e4a:	3001      	adds	r0, #1
  8002e4c:	d103      	bne.n	8002e56 <_printf_common+0xb6>
- 8002e4e:	f04f 30ff 	mov.w	r0, #4294967295
+ 8002e4e:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  8002e52:	e8bd 87f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, pc}
  8002e56:	3501      	adds	r5, #1
  8002e58:	e7c1      	b.n	8002dde <_printf_common+0x3e>
@@ -7042,7 +7042,7 @@ void task_c_update(void *parameters)
  8002fba:	bfde      	ittt	le
  8002fbc:	2330      	movle	r3, #48	@ 0x30
  8002fbe:	f806 3c01 	strble.w	r3, [r6, #-1]
- 8002fc2:	f106 36ff 	addle.w	r6, r6, #4294967295
+ 8002fc2:	f106 36ff 	addle.w	r6, r6, #4294967295	@ 0xffffffff
  8002fc6:	1b92      	subs	r2, r2, r6
  8002fc8:	6122      	str	r2, [r4, #16]
  8002fca:	464b      	mov	r3, r9
@@ -7053,7 +7053,7 @@ void task_c_update(void *parameters)
  8002fd6:	f7ff fee3 	bl	8002da0 <_printf_common>
  8002fda:	3001      	adds	r0, #1
  8002fdc:	d14a      	bne.n	8003074 <_printf_i+0x1f0>
- 8002fde:	f04f 30ff 	mov.w	r0, #4294967295
+ 8002fde:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  8002fe2:	b004      	add	sp, #16
  8002fe4:	e8bd 87f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, pc}
  8002fe8:	6823      	ldr	r3, [r4, #0]
@@ -7175,7 +7175,7 @@ void task_c_update(void *parameters)
  80030e2:	4628      	mov	r0, r5
  80030e4:	f000 f82a 	bl	800313c <__swsetup_r>
  80030e8:	b118      	cbz	r0, 80030f2 <__swbuf_r+0x32>
- 80030ea:	f04f 37ff 	mov.w	r7, #4294967295
+ 80030ea:	f04f 37ff 	mov.w	r7, #4294967295	@ 0xffffffff
  80030ee:	4638      	mov	r0, r7
  80030f0:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
  80030f2:	6823      	ldr	r3, [r4, #0]
@@ -7232,7 +7232,7 @@ void task_c_update(void *parameters)
  800315c:	2209      	movs	r2, #9
  800315e:	602a      	str	r2, [r5, #0]
  8003160:	f043 0340 	orr.w	r3, r3, #64	@ 0x40
- 8003164:	f04f 30ff 	mov.w	r0, #4294967295
+ 8003164:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
  8003168:	81a3      	strh	r3, [r4, #12]
  800316a:	e033      	b.n	80031d4 <__swsetup_r+0x98>
  800316c:	0758      	lsls	r0, r3, #29
@@ -7345,7 +7345,7 @@ void task_c_update(void *parameters)
 08003258 <memcpy>:
  8003258:	440a      	add	r2, r1
  800325a:	4291      	cmp	r1, r2
- 800325c:	f100 33ff 	add.w	r3, r0, #4294967295
+ 800325c:	f100 33ff 	add.w	r3, r0, #4294967295	@ 0xffffffff
  8003260:	d100      	bne.n	8003264 <memcpy+0xc>
  8003262:	4770      	bx	lr
  8003264:	b510      	push	{r4, lr}
